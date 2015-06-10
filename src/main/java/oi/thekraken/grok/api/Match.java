@@ -35,6 +35,7 @@ public class Match {
 
   private String subject; // texte
   private Map<String, String> capture;
+  private Map<String, String> captureRich; //includes pattern name information
   private Garbage garbage;
   private Grok grok;
   private Matcher match;
@@ -59,6 +60,7 @@ public class Match {
     grok = null;
     match = null;
     capture = new TreeMap<String, String>();
+    captureRich = new TreeMap<String, String>();
     garbage = new Garbage();
     start = 0;
     end = 0;
@@ -141,6 +143,7 @@ public class Match {
       return;
     }
     capture.clear();
+    captureRich.clear();
 
     // _capture.put("LINE", this.line);
     // _capture.put("LENGTH", this.line.length() +"");
@@ -161,8 +164,19 @@ public class Match {
       if (pairs.getValue() != null) {
       	value = cleanString(pairs.getValue().toString());
       }
-
+      
+			String[] ss = key.split(":");
+			String typeAndKey;
+			if(ss.length != 2){
+				key = ss[0];
+				typeAndKey = key;
+			} else {
+				typeAndKey = key;
+				key = ss[1];
+			}
+			
       capture.put(key, value);
+      captureRich.put(typeAndKey, value);
       it.remove(); // avoids a ConcurrentModificationException
     }
   }
@@ -244,6 +258,16 @@ public class Match {
     this.cleanMap();
     return capture;
   }
+
+  /**
+   * Get the map representation of the matched element in the text.
+   * This map keys are different from {@link #toMap()} so that they also contain matched pattern name prefixed to each key.
+   * @author seb
+   * @return
+   */
+  public Map<String, String> toRichMap() {
+		return captureRich;
+	}
 
   /**
    * Remove and rename the unwanted elelents in the matched map.
