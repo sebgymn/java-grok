@@ -34,7 +34,7 @@ import com.google.gson.GsonBuilder;
 public class Match {
 
   private String subject; // texte
-  private Map<String, Object> capture;
+  private Map<String, String> capture;
   private Garbage garbage;
   private Grok grok;
   private Matcher match;
@@ -58,7 +58,7 @@ public class Match {
     subject = "Nothing";
     grok = null;
     match = null;
-    capture = new TreeMap<String, Object>();
+    capture = new TreeMap<String, String>();
     garbage = new Garbage();
     start = 0;
     end = 0;
@@ -152,22 +152,17 @@ public class Match {
       @SuppressWarnings("rawtypes")
       Map.Entry pairs = (Map.Entry) it.next();
       String key = null;
-      Object value = null;
+      String value = null;
       if (this.grok.getNamedRegexCollectionById(pairs.getKey().toString()) == null) {
         key = pairs.getKey().toString();
       } else if (!this.grok.getNamedRegexCollectionById(pairs.getKey().toString()).isEmpty()) {
         key = this.grok.getNamedRegexCollectionById(pairs.getKey().toString());
       }
       if (pairs.getValue() != null) {
-        value = pairs.getValue().toString();
-        if (this.isInteger(value.toString())) {
-          value = Integer.parseInt(value.toString());
-        } else {
-          value = cleanString(pairs.getValue().toString());
-        }
+      	value = cleanString(pairs.getValue().toString());
       }
 
-      capture.put(key, (Object) value);
+      capture.put(key, value);
       it.remove(); // avoids a ConcurrentModificationException
     }
   }
@@ -245,7 +240,7 @@ public class Match {
    *
    * @return map object from the matched element in the text
    */
-  public Map<String, Object> toMap() {
+  public Map<String, String> toMap() {
     this.cleanMap();
     return capture;
   }
@@ -270,18 +265,4 @@ public class Match {
     return false;
   }
 
-  /**
-   * Util fct.
-   *
-   * @param s
-   * @return boolean
-   */
-  private boolean isInteger(String s) {
-    try {
-      Integer.parseInt(s);
-    } catch (NumberFormatException e) {
-      return false;
-    }
-    return true;
-  }
 }

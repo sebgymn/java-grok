@@ -362,8 +362,7 @@ public class Grok {
         if(!grokPatternDefinition.containsKey(group.get("pattern"))){
         	throw new GrokException("Pattern name " + group.get("pattern") + " unknown!");
         }
-        namedRegexCollection.put("name" + index,
-            (group.get("subname") != null ? group.get("subname") : group.get("name")));
+        namedRegexCollection.put("name" + index, group.get("name"));
         namedRegex =
             StringUtils.replace(namedRegex, "%{" + group.get("name") + "}", "(?<name" + index + ">"
                 + grokPatternDefinition.get(group.get("pattern")) + ")");

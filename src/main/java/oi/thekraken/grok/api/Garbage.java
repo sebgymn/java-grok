@@ -96,7 +96,7 @@ public class Garbage {
    * @param map to clean
    * @return nb of deleted item
    */
-  public int remove(Map<String, Object> map) {
+  public int remove(Map<String, String> map) {
     int item = 0;
 
     if (map == null) {
@@ -107,8 +107,8 @@ public class Garbage {
       return item;
     }
 
-    for (Iterator<Map.Entry<String, Object>> it = map.entrySet().iterator(); it.hasNext();) {
-      Map.Entry<String, Object> entry = it.next();
+    for (Iterator<Map.Entry<String, String>> it = map.entrySet().iterator(); it.hasNext();) {
+      Map.Entry<String, String> entry = it.next();
       for (int i = 0; i < toRemove.size(); i++) {
         if (entry.getKey().equals(toRemove.get(i))) {
           it.remove();
@@ -125,7 +125,7 @@ public class Garbage {
    * @param map
    * @return nb of renamed items
    */
-  public int rename(Map<String, Object> map) {
+  public int rename(Map<String, String> map) {
     int item = 0;
 
     if (map == null) {
@@ -139,7 +139,7 @@ public class Garbage {
     for (Iterator<Map.Entry<String, Object>> it = toRename.entrySet().iterator(); it.hasNext();) {
       Map.Entry<String, Object> entry = it.next();
       if (map.containsKey(entry.getKey())) {
-        Object obj = map.remove(entry.getKey());
+        String obj = map.remove(entry.getKey());
         map.put(entry.getValue().toString(), obj);
         item++;
       }
